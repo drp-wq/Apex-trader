@@ -5,14 +5,13 @@ Enforces safety gates and protective-order verification prior to routing orders.
 from typing import Dict, Any, Optional
 from core.safety import safety_policy, SafetyViolationError
 from execution.protection_verifier import ProtectiveOrderVerifier, ProtectiveOrderViolationError
-from exchanges.paper import PaperExchange
 from models.domain import Order, Provenance
 
 
 class ExecutionEngine:
     def __init__(
         self,
-        paper_exchange: PaperExchange,
+        paper_exchange: Any,
         safety_override=None,
         protection_verifier: Optional[ProtectiveOrderVerifier] = None
     ):
@@ -37,8 +36,14 @@ class ExecutionEngine:
         self.safety.verify_order_execution(order_payload)
 
         # 2. Protective order pre-execution verification
-        current_balance = self.paper_exchange.get_balance()
+        current_balance = (
+            self.paper_exchange.get_balance()
+            if hasattr(self.paper_exchange, "get_balance")
+            else getattr(self.paper_exchange, "balance", 500.0)
+        )
         self.protection_verifier.assert_verified(order, current_balance)
 
         # 3. Execute in paper simulator
-        return self.paper_exchange.create_order(order)
+        if hasattr(self.paper_exchange, "create_order"):
+            return self.paper_exchange.create_order(order)
+        return self.paper_exchange.execute_order(order)

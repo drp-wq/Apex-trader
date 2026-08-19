@@ -4,7 +4,7 @@ Simulates market/limit order matching, SL/TP triggers, trailing stops, fees, and
 Enforces strict PAPER provenance and fail-closed safety.
 """
 from dataclasses import dataclass, field
-from typing import Dict, List, Optional
+from typing import Dict, List, Optional, Any
 import time
 import uuid
 
@@ -72,18 +72,27 @@ class PaperTradingEngine:
         self.trade_history: List[PaperTradeRecord] = []
         self.order_book: Dict[str, Order] = {}
 
+    def get_balance(self) -> float:
+        return self.balance
+
+    def get_positions(self) -> Dict[str, ActivePaperPosition]:
+        return self.positions
+
+    def create_order(self, order: Order) -> Dict[str, Any]:
+        return self.execute_order(order)
+
     def execute_order(
         self,
         order: Order,
         tp2: Optional[float] = None,
         tp3: Optional[float] = None,
         trailing_stop_distance: Optional[float] = None
-    ) -> Dict[str, any]:
+    ) -> Dict[str, Any]:
         """
         Executes a paper order, applying simulated slippage, commission fees, and safety checks.
         """
         # Safety validation
-        safety_policy.verify_paper_execution({"provenance": order.provenance.value})
+        safety_policy.verify_paper_execution({"provenance": order.provenance.value if hasattr(order.provenance, "value") else str(order.provenance)})
 
         # Apply slippage to entry
         exec_price = order.price
@@ -229,7 +238,7 @@ class PaperTradingEngine:
             return self._close_position_internal(symbol, current_price, "MANUAL", time.time())
         return None
 
-    def get_account_summary(self) -> Dict[str, any]:
+    def get_account_summary(self) -> Dict[str, Any]:
         """Returns the paper portfolio equity, unrealized PnL, and balance metrics."""
         unrealized = sum(p.unrealized_pnl for p in self.positions.values())
         equity = round(self.balance + unrealized, 4)
