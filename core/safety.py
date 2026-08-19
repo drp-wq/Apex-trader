@@ -3,7 +3,6 @@ Deterministic Safety Enforcement Layer for APEX TRADER.
 Prevents any real-money routing or execution violations at runtime.
 """
 from typing import Dict, Any, Optional
-from dataclasses import dataclass
 from config.settings import get_config
 
 
@@ -68,6 +67,11 @@ class SafetyPolicy:
             raise SafetyViolationError(f"Safety Gate Violation: Unauthorized endpoint domain '{url}'.")
             
         return True
+
+    def assert_production_disabled(self) -> None:
+        """Hard assertion ensuring real execution remains permanently locked."""
+        if getattr(self.config.safety, "PRODUCTION_ENABLED", True):
+            raise SafetyViolationError("CRITICAL: Production trading is strictly disabled.")
 
     def get_safety_status(self) -> Dict[str, Any]:
         """Returns the current immutable safety state for monitoring."""
