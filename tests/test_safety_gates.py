@@ -58,6 +58,7 @@ def test_execution_engine_routing():
     paper = PaperExchange(initial_balance=500.0)
     engine = ExecutionEngine(paper_exchange=paper)
     
+    # 500 distance * 0.01 qty = $5.00 risk (exact 1% of $500 balance)
     order = Order(
         order_id="safety-test-01",
         symbol="BTCUSDT",
@@ -65,7 +66,7 @@ def test_execution_engine_routing():
         order_type=OrderType.MARKET,
         price=50000.0,
         quantity=0.01,
-        stop_price=49000.0,
+        stop_price=49500.0,
         take_profit_price=53000.0,
         provenance=Provenance.PAPER
     )
