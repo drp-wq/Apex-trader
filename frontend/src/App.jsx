@@ -2,19 +2,19 @@ import React, { useState, useEffect } from 'react';
 
 export default function App() {
   const [safety, setSafety] = useState(null);
-  const [account, setAccount] = useState({ balance: 500, equity: 500, unrealized_pnl: 0, open_positions_count: 0 });
+  const [account, setAccount] = useState({ balance: 514.75, equity: 514.75, unrealized_pnl: 0, open_positions_count: 0 });
   const [positions, setPositions] = useState({});
   const [statusMsg, setStatusMsg] = useState('');
 
   const fetchState = async () => {
     try {
-      const sRes = await fetch('http://localhost:8000/safety');
+      const sRes = await fetch('/safety');
       if (sRes.ok) setSafety(await sRes.json());
 
-      const aRes = await fetch('http://localhost:8000/paper/account');
+      const aRes = await fetch('/paper/account');
       if (aRes.ok) setAccount(await aRes.json());
 
-      const pRes = await fetch('http://localhost:8000/paper/positions');
+      const pRes = await fetch('/paper/positions');
       if (pRes.ok) setPositions(await pRes.json());
     } catch (e) {
       console.warn("Backend connecting...");
@@ -23,7 +23,7 @@ export default function App() {
 
   useEffect(() => {
     fetchState();
-    const interval = setInterval(fetchState, 2000);
+    const interval = setInterval(fetchState, 1500);
     return () => clearInterval(interval);
   }, []);
 
@@ -31,7 +31,7 @@ export default function App() {
     try {
       const prices = {};
       Object.keys(positions).forEach(s => prices[s] = positions[s].entry_price);
-      const res = await fetch('http://localhost:8000/paper/flatten', {
+      const res = await fetch('/paper/flatten', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(prices)
