@@ -36,10 +36,13 @@ def test_full_apex_trader_pipeline_e2e(tmp_path):
 
     # 3. Simulate Ingestion: Generate a Bullish SMC Candlestick Pattern
     candles = [
-        Candle("BTCUSDT", 100.0, 50000, 50100, 49800, 49900, 10.0, provenance=Provenance.PAPER), # Base
-        Candle("BTCUSDT", 200.0, 49900, 50000, 49500, 49600, 10.0, provenance=Provenance.PAPER), # Order Block base
-        Candle("BTCUSDT", 300.0, 49600, 51500, 49600, 51400, 50.0, provenance=Provenance.PAPER), # Expansion / BOS
-        Candle("BTCUSDT", 400.0, 51400, 51600, 50600, 51200, 15.0, provenance=Provenance.PAPER), # Leaves FVG [50100, 50600]
+        Candle("BTCUSDT", 100.0, 50000, 50100, 49800, 49900, 10.0, provenance=Provenance.PAPER),
+        Candle("BTCUSDT", 200.0, 49900, 50000, 49500, 49600, 10.0, provenance=Provenance.PAPER),
+        Candle("BTCUSDT", 300.0, 49600, 50200, 49600, 50100, 10.0, provenance=Provenance.PAPER),
+        Candle("BTCUSDT", 400.0, 50100, 51000, 50000, 50900, 10.0, provenance=Provenance.PAPER),
+        Candle("BTCUSDT", 500.0, 50900, 50700, 50000, 50200, 10.0, provenance=Provenance.PAPER),
+        Candle("BTCUSDT", 600.0, 50200, 52000, 50100, 51800, 80.0, provenance=Provenance.PAPER),
+        Candle("BTCUSDT", 700.0, 51800, 52200, 51200, 52000, 30.0, provenance=Provenance.PAPER),
     ]
 
     # 4. SMC Analysis Engines
