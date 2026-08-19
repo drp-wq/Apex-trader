@@ -14,6 +14,11 @@ from analysis.fvg import FVGEngine
 from analysis.order_blocks import OrderBlockEngine
 from analysis.liquidity import LiquidityEngine
 from analysis.volume_profile import VolumeProfileEngine
+from analysis.confluence import (
+    ConfluenceEngine,
+    ConfluenceDecision,
+    ConfluenceResult,
+)
 
 __all__ = [
     "StructureType",
@@ -30,4 +35,7 @@ __all__ = [
     "OrderBlockEngine",
     "LiquidityEngine",
     "VolumeProfileEngine",
+    "ConfluenceEngine",
+    "ConfluenceDecision",
+    "ConfluenceResult",
 ]
