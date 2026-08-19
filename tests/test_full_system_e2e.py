@@ -142,11 +142,19 @@ def test_full_apex_trader_pipeline_e2e(tmp_path):
     notifier.notify_paper_fill(order.symbol, order.direction, fill["exec_price"], fill["quantity"])
 
     # 10. Feed Take-Profit Trigger Candle
-    target_hit_candle = Candle("BTCUSDT", 900.0, 51800, setup.tp1 + 100.0, 51700, setup.tp1 + 50.0, 20.0)
+    target_hit_candle = Candle(
+        "BTCUSDT",
+        900.0,
+        51800.0,
+        max(51800.0, setup.tp1 + 100.0),
+        51700.0,
+        setup.tp1 + 50.0,
+        20.0,
+    )
     closed_trades = paper_engine.on_price_update(target_hit_candle)
 
     assert len(closed_trades) == 1
-    assert closed_trades[0].exit_reason == "TAKE_PROFIT_1"
+    assert closed_trades[0].exit_reason == "TAKE_PROFIT"
     assert closed_trades[0].realized_pnl > 0.0
 
     # 11. Persist Trade in SQLite Database & Dispatch Alert
