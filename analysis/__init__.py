@@ -19,6 +19,10 @@ from analysis.confluence import (
     ConfluenceDecision,
     ConfluenceResult,
 )
+from analysis.setup_engine import (
+    TradeSetupEngine,
+    TradeSetup,
+)
 
 __all__ = [
     "StructureType",
@@ -38,4 +42,6 @@ __all__ = [
     "ConfluenceEngine",
     "ConfluenceDecision",
     "ConfluenceResult",
+    "TradeSetupEngine",
+    "TradeSetup",
 ]
